@@ -1,0 +1,47 @@
+{
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:web:alialkhtri3-png.github.io",
+
+  "verificationMethod": [
+    {
+      "id": "did:web:alialkhtri3-png.github.io#owner",
+      "type": "EcdsaSecp256k1RecoveryMethod2020",
+      "controller": "did:web:alialkhtri3-png.github.io",
+      "blockchainAccountId": "eip155:8453:0x20d0c7b904deeb5d5b145cfc0bc095ebf4139b27"
+    }
+  ],
+
+  "authentication": [
+    "did:web:alialkhtri3-png.github.io#owner"
+  ],
+
+  "assertionMethod": [
+    "did:web:alialkhtri3-png.github.io#owner"
+  ],
+
+  "service": [
+    {
+      "id": "#profile",
+      "type": "Profile",
+      "serviceEndpoint": {
+        "name": "Ali Alkhtri",
+        "displayName": "Ali",
+        "description": "Base Onchain Identity",
+        "network": "Base",
+        "wallet": "0x20d0c7b904deeb5d5b145cfc0bc095ebf4139b27"
+      }
+    },
+    {
+      "id": "#legacy-wallet",
+      "type": "LinkedWallet",
+      "serviceEndpoint": {
+        "network": "ethereum",
+        "address": "0xOLD_ADDRESS",
+        "proofType": "personal_sign",
+        "message": "I link this legacy wallet to did:web:alialkhtri3-png.github.io",
+        "signature": "0xPASTE_SIGNATURE_HERE"
+      }
+    }
+  ]
+}
+
