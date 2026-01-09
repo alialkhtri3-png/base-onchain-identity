@@ -42,3 +42,15 @@
   ]
 }
 
+,
+{
+  "id": "#legacy-wallet",
+  "type": "LinkedWallet",
+  "serviceEndpoint": {
+    "network": "ethereum",
+    "address": "0xOLD_ADDRESS",
+    "proofType": "personal_sign",
+    "message": "I link this legacy wallet to did:web:alialkhtri3-png.github.io:base-onchain-identity"
+  }
+}
+
