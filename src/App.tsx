@@ -9,6 +9,7 @@ export default function App() {
   const [account, setAccount] = useState<string | null>(null);
   const [verified, setVerified] = useState(false);
   const [status, setStatus] = useState("");
+  const [network, setNetwork] = useState<string>("");
 
   async function connectWallet() {
     if (!(window as any).ethereum) {
@@ -19,8 +20,12 @@ export default function App() {
     const provider = new ethers.BrowserProvider(
       (window as any).ethereum
     );
+
     const accounts = await provider.send("eth_requestAccounts", []);
     setAccount(accounts[0]);
+
+    const net = await provider.getNetwork();
+    setNetwork(net.name);
   }
 
   async function signMessage() {
@@ -57,6 +62,7 @@ export default function App() {
       ) : (
         <>
           <p><b>Connected:</b> {account}</p>
+          <p><b>Network:</b> {network}</p>
           <button onClick={signMessage}>Sign & Verify</button>
         </>
       )}
@@ -65,9 +71,5 @@ export default function App() {
       {verified && <p>🔐 Identity successfully linked</p>}
     </div>
   );
-}
-const network = await provider.getNetwork();
-if (network.chainId !== 8453n) {
-  alert("Please switch to Base network");
 }
 
