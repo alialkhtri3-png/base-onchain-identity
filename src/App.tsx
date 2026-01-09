@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ethers } from "ethers";
 
-const DID = "did:web:alialkhtri3-png.github.io";
+const DID = "did:web:alialkhtri3-png.github.io:base-onchain-identity";
 const EXPECTED_ADDRESS =
   "0x20d0c7b904deeb5d5b145cfc0bc095ebf4139b27".toLowerCase();
 
@@ -9,7 +9,6 @@ export default function App() {
   const [account, setAccount] = useState<string | null>(null);
   const [verified, setVerified] = useState(false);
   const [status, setStatus] = useState("");
-  const [network, setNetwork] = useState<string>("");
 
   async function connectWallet() {
     if (!(window as any).ethereum) {
@@ -20,12 +19,8 @@ export default function App() {
     const provider = new ethers.BrowserProvider(
       (window as any).ethereum
     );
-
     const accounts = await provider.send("eth_requestAccounts", []);
     setAccount(accounts[0]);
-
-    const net = await provider.getNetwork();
-    setNetwork(net.name);
   }
 
   async function signMessage() {
@@ -36,17 +31,27 @@ export default function App() {
     );
     const signer = await provider.getSigner();
 
-    const message = `I control ${DID}`;
-    const signature = await signer.signMessage(message);
+    const message = `
+Login with DID
 
+DID: ${DID}
+Domain: alialkhtri3-png.github.io
+URI: https://alialkhtri3-png.github.io/base-onchain-identity
+Chain: Base
+Issued At: ${new Date().toISOString()}
+`;
+
+    const signature = await signer.signMessage(message);
     const recovered = ethers.verifyMessage(message, signature);
 
     if (recovered.toLowerCase() === EXPECTED_ADDRESS) {
       setVerified(true);
-      setStatus("✅ Ownership Verified");
+      setStatus("✅ Logged in with DID");
+      localStorage.setItem("did", DID);
+      localStorage.setItem("address", account);
     } else {
       setVerified(false);
-      setStatus("❌ Verification Failed");
+      setStatus("❌ Invalid DID owner");
     }
   }
 
@@ -62,8 +67,7 @@ export default function App() {
       ) : (
         <>
           <p><b>Connected:</b> {account}</p>
-          <p><b>Network:</b> {network}</p>
-          <button onClick={signMessage}>Sign & Verify</button>
+          <button onClick={signMessage}>Sign & Verify DID</button>
         </>
       )}
 

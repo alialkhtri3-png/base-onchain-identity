@@ -1,4 +1,7 @@
 {
+  "id": "#ui",
+  "type": "DecentralizedWebApp",
+  "serviceEndpoint": "https://alialkhtri3-png.github.io/base-onchain-identity/"{
   "@context": "https://www.w3.org/ns/did/v1",
   "id": "did:web:alialkhtri3-png.github.io:base-onchain-identity",
 
