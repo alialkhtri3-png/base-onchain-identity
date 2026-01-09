@@ -1,142 +1,68 @@
 import { useState } from "react";
 import { ethers } from "ethers";
 
-declare global {
-  interface Window {
-    ethereum?: any;
+const DID = "did:web:alialkhtri3-png.github.io";
+const EXPECTED_ADDRESS =
+  "0x20d0c7b904deeb5d5b145cfc0bc095ebf4139b27".toLowerCase();
+
+export default function App() {
+  const [account, setAccount] = useState<string | null>(null);
+  const [verified, setVerified] = useState(false);
+  const [status, setStatus] = useState("");
+
+  async function connectWallet() {
+    if (!(window as any).ethereum) {
+      alert("MetaMask not found");
+      return;
+    }
+
+    const provider = new ethers.BrowserProvider(
+      (window as any).ethereum
+    );
+    const accounts = await provider.send("eth_requestAccounts", []);
+    setAccount(accounts[0]);
   }
-}
 
-const DID = "did:pkh:eip155:8453:0x20d0c7b904deeb5d5b145cfc0bc095ebf4139b27";
+  async function signMessage() {
+    if (!account) return;
 
-function App() {
-  const [account, setAccount] = useState<string>("");
-  const [signature, setSignature] = useState<string>("");
-  const [verified, setVerified] = useState<boolean | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+    const provider = new ethers.BrowserProvider(
+      (window as any).ethereum
+    );
+    const signer = await provider.getSigner();
 
-  const message = account
-    ? `I am Ali Alkhtri.
-I am verifying ownership of my onchain identity.
+    const message = `I control ${DID}`;
+    const signature = await signer.signMessage(message);
 
-DID: ${DID}
-Wallet: ${account}`
-    : "";
+    const recovered = ethers.verifyMessage(message, signature);
 
-  // 🔌 Connect Wallet
-  const connectWallet = async () => {
-    try {
-      if (!window.ethereum) {
-        alert("MetaMask غير مثبت");
-        return;
-      }
-
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const accounts = await provider.send("eth_requestAccounts", []);
-      setAccount(accounts[0]);
-      setSignature("");
-      setVerified(null);
-    } catch (err) {
-      console.error(err);
-    }
-  };
-
-  // ✍️ Sign Identity
-  const signMessage = async () => {
-    try {
-      if (!window.ethereum || !account) return;
-
-      setLoading(true);
-      const provider = new ethers.BrowserProvider(window.ethereum);
-      const signer = await provider.getSigner();
-      const sig = await signer.signMessage(message);
-
-      setSignature(sig);
-      setVerified(null);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // ✅ Verify Signature
-  const verifySignature = () => {
-    try {
-      if (!signature || !account) return;
-
-      const recovered = ethers.verifyMessage(message, signature);
-      const isValid =
-        recovered.toLowerCase() === account.toLowerCase();
-
-      setVerified(isValid);
-    } catch (err) {
-      console.error(err);
+    if (recovered.toLowerCase() === EXPECTED_ADDRESS) {
+      setVerified(true);
+      setStatus("✅ Ownership Verified");
+    } else {
       setVerified(false);
+      setStatus("❌ Verification Failed");
     }
-  };
+  }
 
   return (
-    <div
-      style={{
-        padding: 40,
-        fontFamily: "system-ui, sans-serif",
-        maxWidth: 720,
-        margin: "0 auto",
-      }}
-    >
-      <h1>🔐 Base Onchain Identity</h1>
+    <div style={{ padding: 24, fontFamily: "system-ui" }}>
+      <h1>Base Onchain Identity</h1>
 
-      <p>
-        <b>DID:</b><br />
-        <code>{DID}</code>
-      </p>
+      <p><b>DID:</b> {DID}</p>
+      <p><b>Expected Address:</b> {EXPECTED_ADDRESS}</p>
 
-      {!account && (
-        <button onClick={connectWallet}>
-          Connect Wallet
-        </button>
-      )}
-
-      {account && (
+      {!account ? (
+        <button onClick={connectWallet}>Connect Wallet</button>
+      ) : (
         <>
-          <p>
-            <b>Connected Wallet:</b><br />
-            <code>{account}</code>
-          </p>
-
-          <button onClick={signMessage} disabled={loading}>
-            {loading ? "Signing..." : "Sign Identity"}
-          </button>
-
-          {signature && (
-            <>
-              <p>
-                <b>Signature:</b>
-              </p>
-              <textarea
-                readOnly
-                value={signature}
-                style={{ width: "100%", height: 120 }}
-              />
-
-              <button onClick={verifySignature}>
-                Verify Signature
-              </button>
-            </>
-          )}
-
-          {verified !== null && (
-            <h3>
-              {verified
-                ? "✅ Identity Verified (DID Owner)"
-                : "❌ Verification Failed"}
-            </h3>
-          )}
+          <p><b>Connected:</b> {account}</p>
+          <button onClick={signMessage}>Sign & Verify</button>
         </>
       )}
+
+      {status && <h2>{status}</h2>}
+      {verified && <p>🔐 Identity successfully linked</p>}
     </div>
   );
 }
-
-export default App;
