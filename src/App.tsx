@@ -66,3 +66,8 @@ export default function App() {
     </div>
   );
 }
+const network = await provider.getNetwork();
+if (network.chainId !== 8453n) {
+  alert("Please switch to Base network");
+}
+
