@@ -1,0 +1,27 @@
+{
+  "@context": "https://www.w3.org/ns/did/v1",
+  "id": "did:pkh:eip155:8453:0x20d0c7b904deeb5d5b145cfc0bc095ebf4139b27",
+  "verificationMethod": [
+    {
+      "id": "#ali",
+      "type": "EcdsaSecp256k1RecoveryMethod2020",
+      "controller": "did:pkh:eip155:8453:0x20d0c7b904deeb5d5b145cfc0bc095ebf4139b27",
+      "blockchainAccountId": "eip155:8453:0x20d0c7b904deeb5d5b145cfc0bc095ebf4139b27"
+    }
+  ],
+  "authentication": ["#ali"],
+  "assertionMethod": ["#ali"],
+  "service": [
+    {
+      "id": "#profile",
+      "type": "Profile",
+      "serviceEndpoint": {
+        "name": "Ali Alkhtri",
+        "displayName": "Ali",
+        "description": "Base Onchain Identity",
+        "network": "Base",
+        "wallet": "0x20d0c7b904deeb5d5b145cfc0bc095ebf4139b27"
+      }
+    }
+  ]
+}
