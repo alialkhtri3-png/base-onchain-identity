@@ -37,7 +37,7 @@
       "serviceEndpoint": "did:pkh:eip155:8453:0x20d0c7b904deeb5d5b145cfc0bc095ebf4139b27"
     },
     {
-      "id": "#legacy-wallet",
+      
       "type": "LinkedWallet",
       "serviceEndpoint": {
         "network": "ethereum",
