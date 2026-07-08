@@ -36,14 +36,11 @@
       "type": "LinkedWallet",
       "serviceEndpoint": {
         "network": "ethereum",
-        "address": "0xOLD_ADDRESS",
+        "address": "",
         "proofType": "personal_sign",
-        "message": "I link this legacy wallet to did:web:alialkhtri3-png.github.io",
-        "signature": "0xPASTE_SIGNATURE_HERE"
+        "message": "",
+        "signature": ""
       }
     }
   ]
 }
-
-"id": "did:web:alialkhtri3-png.github.io"
-
