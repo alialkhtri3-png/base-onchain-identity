@@ -36,3 +36,7 @@ npm run dev
 - توقيع رسالة (Message Signing)
 - التحقق من التوقيع محليًا
 - تعريف DID عبر:
+Improve project documentation
+Add credential and verifiable identity modules
+Clean DID document
+...
